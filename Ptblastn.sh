@@ -11,18 +11,18 @@ printf " Getting in folder 'nucleotide_sequences' all files with the following e
     .frn: FASTA non-coding RNA
     .fastq: FASTQ\n\n"
 
-
+# If directory .../Nucleotide_sequences/ does not exist we make it and exit
 if [ ! -d "$HOME/Documents/Bovine_S.aureus_sequences/Nucleotide_sequences/" ]
-then 
-	#making folder for databases, named db
+then
 	echo "Created directory Bovine_S.aureus_sequences/Nucleotide_sequences/"
 	mkdir "$HOME/Documents/Bovine_S.aureus_sequences/Nucleotide_sequences/"
 	echo "Please add your nucleotide sequences to this directory"
 	exit
 fi
 
+# Move control into the nucleotide sequences folder
 cd "$HOME/Documents/Bovine_S.aureus_sequences/Nucleotide_sequences/"
-echo "$PWD"
+# If the Protein/ directory exists, we remove all the files inside
 if [ -d "Protein/" ]
 then
 	echo "Removing old files in directory Protein..."
@@ -30,18 +30,16 @@ then
     echo "Done"
 fi
 
-#making folder for databases, named Protein/
+# We make the Protein/ folder and move into it
 mkdir Protein
 echo "Created directory Protein/"
-
 cd "Protein/"
-echo "$PWD"
 
-#making folder for databases, named BlastDB
+# Making folder for databases, named BlastDB
 mkdir BlastDB/
 echo "Created directory BlastDB/"
 
-#making folder for result outputs, named BlastOutput
+# Making folder for result outputs, named BlastOutput
 mkdir BlastOutput/
 echo "Created directory BlastOutput/"
 
