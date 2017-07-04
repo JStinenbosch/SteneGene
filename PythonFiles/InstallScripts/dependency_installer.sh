@@ -37,7 +37,12 @@ else
 fi
 }
 
+installTkinter(){
+    sudo apt-get install python3-tk
+}
+
 installBlast+
 installBedtools
 installClustalO
 installORFfinder
+installTkinter
