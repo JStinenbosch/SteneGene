@@ -1,68 +1,35 @@
-from plumbum import local
+import shutil
+import plumbum as pb
+import os
+
+CURRENT_DIR = os.getcwd()
 
 print("\nThis script blasts proteins to nucleotides (tblastn)\n\n")
-
-
-
-'''
-printf "\nThis script blasts proteins to nucleotides (tblastn)\n\n"
-printf " Getting in folder 'nucleotide_sequences' all files with the following extensions:
+print('''Getting in folder 'nucleotide_sequences' all files with the following extensions:
     .fasta, .fas, .fa, .seq, .fsa: Generic FASTA
     .fna, .fna_nt, .fsa_nt: FASTA nucleic acids\n
- But not the following extentions:
+    But not the following extentions:
     .ffn: FASTA nucleotide coding regions for a genome
     .faa FASTA amino acids
     .mpfa: FASTA amino acides in multiple proteins
     .frn: FASTA non-coding RNA
-    .fastq: FASTQ\n\n"
+    .fastq: FASTQ\n\n''')
 
-# If directory .../Nucleotide_sequences/ does not exist we make it and exit
-if [ ! -d "$HOME/Documents/Bovine_S.aureus_sequences/Nucleotide_sequences/" ]
-then
-	echo "Created directory Bovine_S.aureus_sequences/Nucleotide_sequences/"
-	mkdir "$HOME/Documents/Bovine_S.aureus_sequences/Nucleotide_sequences/"
-	echo "Please add your nucleotide sequences to this directory"
-	exit
-fi
+if not os.path.exists(CURRENT_DIR + "/Nucleotide_sequences/"):
+    print("Creating local directory /Nucleotide_sequences/")
+    os.makedirs(CURRENT_DIR + "/Nucleotide_sequences/", exist_ok=True)
+    print("Please add your nucleotide sequences to this directory")
+    exit(-1)
 
-# Move control into the nucleotide sequences folder
-cd "$HOME/Documents/Bovine_S.aureus_sequences/Nucleotide_sequences/"
-# If the Protein/ directory exists, we remove all the files inside
-if [ -d "Protein/" ]
-then
-	echo "Removing old files in directory Protein..."
-	rm -rf Protein/
-    echo "Done"
-fi
+# Concatenates the input files chosen using the filechooser into a single query
+def concat_files(files):
+    with open('ProteinQuery.fa', 'wb') as wfd:
+        for f in files:
+            with open(f, 'rb') as fd:
+                shutil.copyfileobj(fd, wfd, 1024 * 1024 * 10)
 
-# We make the Protein/ folder and move into it
-mkdir Protein
-echo "Created directory Protein/"
-cd "Protein/"
 
-# Making folder for databases, named BlastDB
-mkdir BlastDB/
-echo "Created directory BlastDB/"
-
-# Making folder for result outputs, named BlastOutput
-mkdir BlastOutput/
-echo "Created directory BlastOutput/"
-
-mkdir MergeLines/
-echo "Created directory MergeLines/"
-
-mkdir ProteinFiles/
-echo "Created directory ProteinFiles/"
-
-mkdir Clustal/
-echo "Created directory Clustal/"
-
-mkdir Temp/
-echo "Created directory Temp/"
-
-# Change directory back two folders to find the query proteins
-cd ../..
-
+'''
 # Read every separate protein file (with the correct extension) and paste them into one file
 # Files send to 1>
 # Errors of cat for missing extensions send to 2> (empty folder) to prevent unnecessary errors in prompt
