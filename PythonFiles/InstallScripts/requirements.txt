@@ -1,3 +1,4 @@
 pip
+pysettings
 plumbum
-easygui
+pyforms

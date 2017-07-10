@@ -1,8 +1,55 @@
-import shutil
-import plumbum as pb
+import csv
 import os
+import sys
+from Utilities import *
 
+acceptable_extensions = ['.fasta', '.fas', '.fa', '.fsa', '.fna', '.fsa_nt']
 CURRENT_DIR = os.getcwd()
+
+
+# THIS PART WILL BE REPLACED BY GUI
+def readInput():
+    if len(sys.argv) < 2:
+        print("Please specify input file")
+        exit(-1)
+
+    return sys.argv[1:]
+
+
+# THIS PART WILL BE REPLACED BY GUI
+
+def make_blast_db(files):
+    os.makedirs("BlastDB",exist_ok=True)
+    for sequence in files:
+        os.system("makeblastdb -in " + sequence + " -dbtype nucl -out BlastDB/" + sequence)
+
+def blast_query(files):
+    os.makedirs("BlastOutput",exist_ok=True)
+    for f in files:
+        print("Blasting for " + f)
+        os.system(
+            "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f +
+            " -outfmt \"10 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq\"")
+
+def find_value_in_blast(reader, column):
+    for i, row in enumerate(reader):
+        if i == column:
+            print("This is the line." )
+            print(row)
+            break
+
+def select_files():
+    for f in os.listdir("BlastOutput/"):
+        file_reader = csv.reader(open(f,"r"))
+        while file_reader.next():
+
+    csv.reader(f).next[0]
+    for f in files
+    blast_out = open('BlastOutput/', 'r')
+    reader = csv.reader(blast_out)
+########################################################################################################################
+#                                           Start of script                                                            #
+########################################################################################################################
 
 print("\nThis script blasts proteins to nucleotides (tblastn)\n\n")
 print('''Getting in folder 'nucleotide_sequences' all files with the following extensions:
@@ -21,64 +68,26 @@ if not os.path.exists(CURRENT_DIR + "/Nucleotide_sequences/"):
     print("Please add your nucleotide sequences to this directory")
     exit(-1)
 
-# Concatenates the input files chosen using the filechooser into a single query
-def concat_files(files):
-    with open('ProteinQuery.fa', 'wb') as wfd:
-        for f in files:
-            with open(f, 'rb') as fd:
-                shutil.copyfileobj(fd, wfd, 1024 * 1024 * 10)
+files = readInput()
+for name in files:
+    if not name.endswith(tuple(acceptable_extensions)):
+        print("Incorrect extension, we only allow " + str(acceptable_extensions))
+        exit(-1)
 
+query = handle_input_files(files)
+make_blast_db(files)
+print(files)
+os.system("cd BlastDB && echo $PWD && echo databases have been produced")
+blast_query(files)
+
+select_files()
+
+
+########################################################################################################################
+#                                           End of script                                                              #
+########################################################################################################################
 
 '''
-# Read every separate protein file (with the correct extension) and paste them into one file
-# Files send to 1>
-# Errors of cat for missing extensions send to 2> (empty folder) to prevent unnecessary errors in prompt
-cat Query/Proteins/*.{fsa_nt,fa,fsa,fas,seq,fasta,fna_nt,fna} 1>Nucleotide_sequences/Protein/Temp/ProteinQuery.fa 2>/dev/null
-
-# Change directory back to the working folder
-cd Nucleotide_sequences/
-
-# Copy ProteinQuery file and rename as QueryTemp for further use
-cp Protein/Temp/ProteinQuery.fa Protein/Temp/QueryTemp.fa
-
-awk '/^>/{print s? s"\n"$0:$0;s="";next}{s=s sprintf("%s",$0)}END{if(s)print s}' Protein/Temp/QueryTemp.fa > Protein/Temp/QueryTemp2.fa
-
-awk 'NR%2{printf "%s ",$0;next;}1' Protein/Temp/QueryTemp2.fa > Protein/Temp/QueryTemp3.fa
-
-#Remove the ">" character in front of every protein line (originated from the fasta format)
-sed 's/^.\{1\}//' Protein/Temp/QueryTemp3.fa > Protein/MergeLines/Query.fa
-
-nucleotide_sequences=($(ls | grep ".fsa_nt\|.fa\|.fsa\|.fas\|.seq\|.fasta\|.fna_nt\|.fna"))
-
-for sequence in ${nucleotide_sequences[*]}
-do
-	makeblastdb -in ${sequence} -dbtype nucl -out Protein/BlastDB/${sequence}
-done
-
-echo "all databases produced"
-
-#change directory (cd) to the folder with all files
-cd "Protein/BlastDB/"
-
-echo "changed directory to: $PWD"
-
-#list all files in the folder, just to check!
-printf "List of all files in this directory:\n"
-ls
-
-echo "Grepping database input file in the current directory"
-files=($(ls | grep ".fsa_nt.nsq\|.fna_nt.nsq"))
-for name in ${files[*]}
-do
-
-  cd ../..
-
-  # Removing the .nsq extension in some weird manner because the blast cannot read extentions after the fsa_nt
-  item=`echo ${name} | sed -e 's/\.[^.]*$//'`
-
-  printf "blasting for ${item} ...\n"
-  # Use -max_hsps 1 to obtain only one output
-  tblastn -query FixedFiles/ProteinQuery.fa -db Protein/BlastDB/${item} -out Protein/BlastOutput/${item} -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
 
   # Removing sequences with more than 50 mismatches. The E value is good, but it favours long sequences even though there are a lot of
   # mismatches. So removing lines with more than 50 mismatches fixes this problem.

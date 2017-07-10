@@ -6,6 +6,7 @@ if which blastn > /dev/null; then
 else
     sudo apt-get install ncbi-blast+
 
+# Should be replaced by this to support other linux distros
 #    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.6.0+-x64-linux.tar.gz
 #    tar xzvf ncbi-blast-2.6.0+-x64-linux.tar.gz
 #    ./configure && make && sudo make install
@@ -41,8 +42,13 @@ installTkinter(){
     sudo apt-get install python3-tk
 }
 
+installWxWidgets(){
+    sudo apt-get install wxwidgets
+}
+
 installBlast+
 installBedtools
 installClustalO
 installORFfinder
 installTkinter
+installWxWidgets
