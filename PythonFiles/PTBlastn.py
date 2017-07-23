@@ -28,30 +28,48 @@ def blast_query(files):
     for f in files:
         print("Blasting for " + f)
         os.system(
-            "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f +
-            " -outfmt \"10 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq\"")
+            "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f + " -outfmt 5" +
+            " -best_hit_score_edge 0.05 -best_hit_overhang 0.25 -perc_identity 50 -max_target_seqs 1")
 
-def find_value_in_blast(reader, column):
-    for i, row in enumerate(reader):
-        if i == column:
-            print("This is the line." )
-            print(row)
-            break
+# def find_value_in_blast(reader, column):
+#     for i, row in enumerate(reader):
+#         if i == column:
+#             print("This is the line." )
+#             print(row)
+#             break
 
-def select_files():
-    for f in os.listdir("BlastOutput/"):
-        file_reader = csv.reader(open(f,"r"))
-        while file_reader.next():
+#def select_files():
+#    for f in os.listdir("BlastOutput/"):
+#        file_reader = csv.reader(open(f,"r"))
+#        while file_reader.next():
+#
+#    csv.reader(f).next[0]
+#    for f in files
+#    blast_out = open('BlastOutput/', 'r')
+#    reader = csv.reader(blast_out)
 
-    csv.reader(f).next[0]
-    for f in files
-    blast_out = open('BlastOutput/', 'r')
-    reader = csv.reader(blast_out)
+def ORFfinder(files):
+    os.makedirs("ORF_out",exist_ok=True)
+    for f in files:
+        print ("Finding ORF's for " + f)
+        os.system("getorf -sequence BlastOutput/" + f + " -outseq ORF_out/" + f + " -minsize 250 -table 11 -find 3")
+
+# def Reverse_files(files):
+#     os.makedirs("ORF_genes",exist_ok=True)
+#     for f in files:
+#         while read - r first second
+#         print
+#         "\n>${strains}\n" >> Protein / ProteinFiles /
+#         print
+#         "${second}" >> Protein / ProteinFiles /${first}.fa
+#
+#     done < Protein / MergeLines /${strains}
+
 ########################################################################################################################
 #                                           Start of script                                                            #
 ########################################################################################################################
 
-print("\nThis script blasts proteins to nucleotides (tblastn)\n\n")
+print("\nThis script blasts proteins to nucleotides (blastn)\n\n")
 print('''Getting in folder 'nucleotide_sequences' all files with the following extensions:
     .fasta, .fas, .fa, .seq, .fsa: Generic FASTA
     .fna, .fna_nt, .fsa_nt: FASTA nucleic acids\n
@@ -75,13 +93,22 @@ for name in files:
         exit(-1)
 
 query = handle_input_files(files)
+
 make_blast_db(files)
 print(files)
 os.system("cd BlastDB && echo $PWD && echo databases have been produced")
 blast_query(files)
+#select_files()
 
-select_files()
+ORFfinder(files)
 
+make_blast_db(files)
+print(files)
+os.system("cd BlastDB && echo $PWD && echo databases have been produced")
+blast_query(files)
+#select_files()
+
+# Reverse_files(files)
 
 ########################################################################################################################
 #                                           End of script                                                              #
