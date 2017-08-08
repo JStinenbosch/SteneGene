@@ -1,4 +1,11 @@
-import csv
+'''
+    File name:      PTBlastn.py
+    Authors:        JStinenbosch and FrankTN
+    Python Version: 3.5
+    Description:    This file contains the functions used in the Blast analysis. This script should be run with a list
+                    of fasta files on its input.
+'''
+
 import os
 import sys
 from Utilities import *
@@ -31,43 +38,14 @@ def blast_query(files):
             "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f + " -outfmt 5" +
             " -best_hit_score_edge 0.05 -best_hit_overhang 0.25 -perc_identity 50 -max_target_seqs 1")
 
-# def find_value_in_blast(reader, column):
-#     for i, row in enumerate(reader):
-#         if i == column:
-#             print("This is the line." )
-#             print(row)
-#             break
-
-#def select_files():
-#    for f in os.listdir("BlastOutput/"):
-#        file_reader = csv.reader(open(f,"r"))
-#        while file_reader.next():
-#
-#    csv.reader(f).next[0]
-#    for f in files
-#    blast_out = open('BlastOutput/', 'r')
-#    reader = csv.reader(blast_out)
-
 def ORFfinder(files):
     os.makedirs("ORF_out",exist_ok=True)
     for f in files:
         print ("Finding ORF's for " + f)
         os.system("getorf -sequence BlastOutput/" + f + " -outseq ORF_out/" + f + " -minsize 250 -table 11 -find 3")
 
-# def Reverse_files(files):
-#     os.makedirs("ORF_genes",exist_ok=True)
-#     for f in files:
-#         while read - r first second
-#         print
-#         "\n>${strains}\n" >> Protein / ProteinFiles /
-#         print
-#         "${second}" >> Protein / ProteinFiles /${first}.fa
-#
-#     done < Protein / MergeLines /${strains}
+# Start of script
 
-########################################################################################################################
-#                                           Start of script                                                            #
-########################################################################################################################
 
 print("\nThis script blasts proteins to nucleotides (blastn)\n\n")
 print('''Getting in folder 'nucleotide_sequences' all files with the following extensions:
@@ -98,108 +76,9 @@ make_blast_db(files)
 print(files)
 os.system("cd BlastDB && echo $PWD && echo databases have been produced")
 blast_query(files)
-#select_files()
-
 ORFfinder(files)
 
 make_blast_db(files)
 print(files)
 os.system("cd BlastDB && echo $PWD && echo databases have been produced")
 blast_query(files)
-#select_files()
-
-# Reverse_files(files)
-
-########################################################################################################################
-#                                           End of script                                                              #
-########################################################################################################################
-
-'''
-
-  # Removing sequences with more than 50 mismatches. The E value is good, but it favours long sequences even though there are a lot of
-  # mismatches. So removing lines with more than 50 mismatches fixes this problem.
-  awk '(NR==1) || ($5 < 100 )' Protein/BlastOutput/${item} > Protein/BlastOutput/${item}.2
-
-  # Sorting output to produce one hit per protein for $item
-  sort -u -k1,1 --merge Protein/BlastOutput/${item}.2 -o Protein/BlastOutput/${item}.3
-
-  # Removing sequences with less then 30 percent similarity, these usually are not the same protein and also not fragments of the protein.
-  awk '(NR==1) || ($3 > 30 )' Protein/BlastOutput/${item}.3 > Protein/BlastOutput/${item}.4
-
-
-    #Changing the extention of the files from .fsa_nt.4 to .fa
-    cd Protein/BlastOutput/
-
-  	for file in *.fsa_nt.4
-	do
-	mv "$file" "${file%.fsa_nt.4}.fa"
-	done
-
-done
-
-# Now the blastoutput will be sorted from one strain with all the proteins in the file to one protein file with all
-# the strains in it. It will be put in the folder ProteinFiles. The MergeLines folder is temporary.
-
-    # Change the directory to the BlastOutput folder to retrieve the files of the strains containing
-    # all of the proteins in them. things is the list in the directory containing all the strains with
-    # a .fa extention. units is the variable for the individual strains in the list of things.
-
-        #get the list of all strains(.fa) and set it as things. From the folder op protein/blastouput/
-        things=($(ls | grep ".fa"))
-        cd ../..
-
-        #Set units as variable for all the strains in the things list.
-        for units in ${things[*]}
-        do
-
-    #Read in the strainfile, called units, the first and third line and print them in a new file in
-    # the directory MergeLines. The first line contains the protein name and the third line contains the
-    # amino acid sequence.
-
-            awk '{print $1, $13 }' Protein/BlastOutput/${units} > Protein/MergeLines/${units}
-
-    #Now read the first and second column in the file. The first column is the protein name. This wil be
-    # set a the name of the document in the folder ProteinFiles. This way, all proteins get their own document.
-    # units, which is the strain name, will be printed in the first line of the document to create a fasta
-    # header. second will be printed on the line beneath units, to paste in the amino acid sequence.
-        done
-        cd Protein/MergeLines
-
-        objects=($(ls | grep ".fa"))
-        cd ../..
-
-        #Set units as variable for all the strains in the things list.
-        for strains in ${objects[*]}
-        do
-
-
-	        while read -r first second
-	            do
-		            printf "\n>${strains}\n" >> Protein/ProteinFiles/${first}.fa
-		            printf "${second}" >> Protein/ProteinFiles/${first}.fa
-
-	            done < Protein/MergeLines/${strains}
-
-        done
-
-cd Protein/ProteinFiles/
-echo "$PWD"
-
-output=($(ls | grep ".fa"))
-
-cd ..
-
-for fastaSeq in ${output[*]}
-do
-clustalo -i ProteinFiles/${fastaSeq} -o Clustal/${fastaSeq} --outfmt=clustal -v --dealign --force
-#for clustalw use, insert following command: $clustalw -INFILE=ProteinFiles/${fastaSeq} -OUTFILE=Clustal/${fastaSeq}
-#seaview -plotonly Clustal/${fastaSeq}
-
-done
-
-# Removing the .fa extension of the protein comparison files in the Clustal folder
-cd Clustal/
-find . -name '*.fa' -type f | while read NAME ; do mv "${NAME}" "${NAME%.fa}" ; done
-
-printf "\nAll tasks completed \n"
-'''
