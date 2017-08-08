@@ -28,7 +28,7 @@ def blast_query(files):
     for f in files:
         print("Blasting for " + f)
         os.system(
-            "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f +
+            "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f + "_raw" +
             " -outfmt \"10 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq\"")
 
 def find_value_in_blast(reader, column):
@@ -39,14 +39,16 @@ def find_value_in_blast(reader, column):
             break
 
 def select_files():
-    for f in os.listdir("BlastOutput/"):
-        file_reader = csv.reader(open(f,"r"))
-        while file_reader.next():
+    os.chdir("BlastOutput/")
+    for f in os.listdir():
+        with open(f + '_processed.fa', 'w') as wfd:
+            file_reader = csv.reader(open(f,"r"))
+            for row in file_reader:
+                print(row)
+                if int(row[4]) > 50:
+                    wfd.write(",".join(row))
 
-    csv.reader(f).next[0]
-    for f in files
-    blast_out = open('BlastOutput/', 'r')
-    reader = csv.reader(blast_out)
+
 ########################################################################################################################
 #                                           Start of script                                                            #
 ########################################################################################################################
