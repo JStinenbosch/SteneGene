@@ -8,43 +8,50 @@
 
 import os
 import sys
+import argparse
 from Utilities import *
+from Bio.Blast import NCBIXML
 
 acceptable_extensions = ['.fasta', '.fas', '.fa', '.fsa', '.fna', '.fsa_nt']
 CURRENT_DIR = os.getcwd()
 
 # THIS PART WILL BE REPLACED BY GUI
 def readInput():
-    if len(sys.argv) < 2:
-        print("Please specify input file")
-        exit(-1)
-
-    return sys.argv[1:]
-
+    parser = argparse.ArgumentParser(description='Match query files to WGS input')
+    parser.add_argument('wgs', metavar='wgs_files', type=str, nargs='+',
+                        help='List containing at least one WGS file')
+    parser.add_argument("query",type=str,nargs='+', help='List containing the queries')
+    return parser.parse_args()
 
 # Auxiliary functions
 
 def make_blast_db(files):
-    os.makedirs("BlastDB",exist_ok=True)
-    for sequence in files:
-        os.system("makeblastdb -in " + sequence + " -dbtype nucl -out BlastDB/" + sequence)
+    for WG_Sequence in files:
+        name = os.path.splitext(WG_Sequence)[0]
+        os.system("makeblastdb -in " + WG_Sequence + " -dbtype nucl -out " + name + "_blastdb")
 
 def blast_query(files):
-    os.makedirs("BlastOutput",exist_ok=True)
-    for f in files:
-        print("Blasting for " + f)
+    for WG_Sequence in files:
+        print("Blasting for " + WG_Sequence)
+        name = os.path.splitext(WG_Sequence)[0]
         os.system(
-            "blastn -query ProteinQuery.fa -db BlastDB/" + f + " -out BlastOutput/" + f + " -outfmt 5" +
+            "blastn -query GeneQuery.fa -db " + name + "_blastdb -out " + name + "_blastout -outfmt 5" +
             " -best_hit_score_edge 0.05 -best_hit_overhang 0.25 -perc_identity 50 -max_target_seqs 1")
 
-def ORFfinder(files):
-    os.makedirs("ORF_out",exist_ok=True)
-    for f in files:
-        print ("Finding ORF's for " + f)
-        os.system("getorf -sequence BlastOutput/" + f + " -outseq ORF_out/" + f + " -minsize 250 -table 11 -find 3")
+def ORFfinder(query_matches):
+    for candidate in query_matches:
+        print ("Finding ORF's for " + candidate)
+        name = os.path.splitext(candidate)[0]
+        os.system("getorf -sequence " + name + "_blastout -outseq " + name + "_orfout -minsize 250 -table 11 -find 3")
+
+def check_extensions(files):
+    wgs_files = list(filter(lambda name: name.endswith(tuple(acceptable_extensions)), files))
+    if not wgs_files:
+        print("Incorrect extension, we only allow " + str(acceptable_extensions))
+        exit(-1)
+    return wgs_files
 
 # Start of script
-
 
 print("\nThis script blasts proteins to nucleotides (blastn)\n\n")
 print('''Getting in folder 'Nucleotide_sequences' all files with the following extensions:
@@ -57,27 +64,14 @@ print('''Getting in folder 'Nucleotide_sequences' all files with the following e
     .frn: FASTA non-coding RNA
     .fastq: FASTQ\n\n''')
 
-if not os.path.exists(CURRENT_DIR + "/Nucleotide_sequences/"):
-    print("Creating local directory /Nucleotide_sequences/")
-    os.makedirs(CURRENT_DIR + "/Nucleotide_sequences/", exist_ok=True)
-    print("Please add your nucleotide sequences to this directory")
-    exit(-1)
+arguments = readInput()
+wgs_files = check_extensions(arguments.wgs)
+query_list = check_extensions(arguments.query)
 
-files = readInput()
-for name in files:
-    if not name.endswith(tuple(acceptable_extensions)):
-        print("Incorrect extension, we only allow " + str(acceptable_extensions))
-        exit(-1)
+query = handle_input_files(query_list)
 
-query = handle_input_files(files)
-
-make_blast_db(files)
-print(files)
+make_blast_db(wgs_files)
+print(wgs_files)
 os.system("cd BlastDB && echo $PWD && echo databases have been produced")
-blast_query(files)
-ORFfinder(files)
-
-make_blast_db(files)
-print(files)
-os.system("cd BlastDB && echo $PWD && echo databases have been produced")
-blast_query(files)
+blast_query(wgs_files)
+ORFfinder(wgs_files)
