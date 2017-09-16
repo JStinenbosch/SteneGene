@@ -29,12 +29,14 @@ fi
 }
 
 installORFfinder(){
-if [ -f ORFfinder ]; then
+if which getorf > /dev/null; then
  echo ORFfinder is already available locally
 else
- wget ftp://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/ORFfinder/linux-i64/ORFfinder.gz
- gunzip ORFfinder.gz
- chmod +x ORFfinder
+ sudo apt-get install emboss
+# Same problem here, should be replaced by something like this
+# wget ftp://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/ORFfinder/linux-i64/ORFfinder.gz
+# gunzip ORFfinder.gz
+# chmod +x ORFfinder
 fi
 }
 

@@ -13,7 +13,6 @@ from Utilities import *
 acceptable_extensions = ['.fasta', '.fas', '.fa', '.fsa', '.fna', '.fsa_nt']
 CURRENT_DIR = os.getcwd()
 
-
 # THIS PART WILL BE REPLACED BY GUI
 def readInput():
     if len(sys.argv) < 2:
@@ -23,7 +22,7 @@ def readInput():
     return sys.argv[1:]
 
 
-# THIS PART WILL BE REPLACED BY GUI
+# Auxiliary functions
 
 def make_blast_db(files):
     os.makedirs("BlastDB",exist_ok=True)
@@ -48,7 +47,7 @@ def ORFfinder(files):
 
 
 print("\nThis script blasts proteins to nucleotides (blastn)\n\n")
-print('''Getting in folder 'nucleotide_sequences' all files with the following extensions:
+print('''Getting in folder 'Nucleotide_sequences' all files with the following extensions:
     .fasta, .fas, .fa, .seq, .fsa: Generic FASTA
     .fna, .fna_nt, .fsa_nt: FASTA nucleic acids\n
     But not the following extentions:
