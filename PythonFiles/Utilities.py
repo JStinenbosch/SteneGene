@@ -1,6 +1,8 @@
 import shutil
 from Bio.Blast import NCBIXML
 
+acceptable_extensions = ['.fasta', '.fas', '.fa', '.fsa', '.fna', '.fsa_nt']
+
 def handle_input_files(files, name='GeneQuery.fa'):
     concat_files(files, name)
     return name
@@ -15,3 +17,10 @@ def concat_files(files, name):
 def extract_sequence(blastout_XML_file):
     with open(blastout_XML_file) as handle:
         return NCBIXML.parse(handle)
+
+def check_extensions(files):
+    wgs_files = list(filter(lambda name: name.endswith(tuple(acceptable_extensions)), files))
+    if not wgs_files:
+        print("Incorrect extension, we only allow " + str(acceptable_extensions))
+        exit(-1)
+    return wgs_files
