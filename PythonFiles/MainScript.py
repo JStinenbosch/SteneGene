@@ -28,7 +28,7 @@ print('''Getting in folder 'Nucleotide_sequences' all files with the following e
     .faa FASTA amino acids
     .mpfa: FASTA amino acides in multiple proteins
     .frn: FASTA non-coding RNA
-    .fastq: FASTQ\n\n''')
+    .fastq: FASTQ''')
 
 arguments = readInput()
 wgs_files = check_extensions(arguments.wgs)
@@ -36,7 +36,7 @@ query_list = check_extensions(arguments.query)
 
 query_filename = handle_input_files(query_list)
 
-Blast.make_blast_db(wgs_files, {"example": "value"})
+Blast.make_blast_db(wgs_files, {"dbtype": "nucl"})
 os.system("cd BlastDB && echo $PWD && echo databases have been produced")
-Blast.blast_query(wgs_files, query_filename)
+Blast.blast_query(wgs_files, query_filename, {"word_size": "10"})
 ORFFinder.ORF_query(query_filename)

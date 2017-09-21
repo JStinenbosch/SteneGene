@@ -11,7 +11,10 @@ class ORFFinder(object):
 
     @staticmethod
     def ORF_query(query_match):
+        pass
+        '''
         print("Finding ORF's for " + query_match)
         name = os.path.splitext(query_match)[0]
-        sequence = extract_sequence(name + "_blastout")
+        sequence = extract_sequence(name + ".fa")
         os.system("getorf -sequence " + sequence + " -outseq " + name + "_orfout -minsize 250 -table 11 -find 3")
+        '''
