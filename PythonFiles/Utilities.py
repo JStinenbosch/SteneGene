@@ -24,3 +24,10 @@ def check_extensions(files):
         print("Incorrect extension, we only allow " + str(acceptable_extensions))
         exit(-1)
     return wgs_files
+
+def add_property_to_string(property, arg_dict, result_string, default):
+    if property in arg_dict:
+        result_string += ("-" + property + " " + arg_dict[property] + " ")
+    else:
+        result_string += ("-" + property + " " + default + " ")
+    return result_string
