@@ -5,16 +5,21 @@
 '''
 
 import os
-from Utilities import extract_sequence
+from Utilities import extract_sequence, add_property_to_string
+
 
 class ORFFinder(object):
 
     @staticmethod
-    def ORF_query(query_match):
-        pass
+    def ORF_query(query_name: str, arguments: dict = {}) -> None:
         '''
-        print("Finding ORF's for " + query_match)
-        name = os.path.splitext(query_match)[0]
-        sequence = extract_sequence(name + ".fa")
-        os.system("getorf -sequence " + sequence + " -outseq " + name + "_orfout -minsize 250 -table 11 -find 3")
+            This function runs the getorf command on the system after first parsing the argument dict.
+            Documentation was obtained from http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html
         '''
+        arg_string = ""
+        arg_string = add_property_to_string("minsize", arguments, arg_string, "250")
+        arg_string = add_property_to_string("table", arguments, arg_string, "1")
+        arg_string = add_property_to_string("find", arguments, arg_string, "3")
+
+        extensionless_name = os.path.splitext(query_name)[0]
+        os.system("getorf -sequence " + query_name + " -outseq " + extensionless_name + "_orfout " + arg_string)
