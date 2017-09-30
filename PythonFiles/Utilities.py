@@ -1,6 +1,8 @@
 import shutil
 from Bio.Blast import NCBIXML
 
+acceptable_extensions = ['.fasta', '.fas', '.fa', '.fsa', '.fna', '.fsa_nt']
+
 def handle_input_files(files, name='GeneQuery.fa'):
     concat_files(files, name)
     return name
@@ -15,3 +17,20 @@ def concat_files(files, name):
 def extract_sequence(blastout_XML_file):
     with open(blastout_XML_file) as handle:
         return NCBIXML.parse(handle)
+
+def check_extensions(files):
+    wgs_files = list(filter(lambda name: name.endswith(tuple(acceptable_extensions)), files))
+    if not wgs_files:
+        print("Incorrect extension, we only allow " + str(acceptable_extensions))
+        exit(-1)
+    return wgs_files
+
+def add_property_to_string(property, arg_dict, result_string, default):
+    """ This function is used to construct argument strings in various places. We check whether a certain property is
+        defined. If it is, we add its value to the argument string. If it isn't, we use the default.
+    """
+    if property in arg_dict:
+        result_string += ("-" + property + " " + arg_dict[property] + " ")
+    else:
+        result_string += ("-" + property + " " + default + " ")
+    return result_string
