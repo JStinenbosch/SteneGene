@@ -15,21 +15,26 @@ class Blast(object):
 
     @staticmethod
     def make_blast_db(wgseqs, arguments):
-        if "dbtype" in arguments:
-            type = arguments["dbtype"]
-        else:
-            type = "nucl"
+        arg_string = ""
+        arg_string = add_property_to_string("dbtype", arguments, arg_string, "nucl")
 
         for WG_Sequence in wgseqs:
             name = os.path.splitext(WG_Sequence)[0]         # Remove file extension
-            os.system("makeblastdb -in " + WG_Sequence + " -dbtype " + type + " -out " + name + "_blastdb")
+            os.system("makeblastdb -in " + WG_Sequence + " -out " + name + "_blastdb " + arg_string)
 
     @staticmethod
     def blast_query(files, query, arguments):
+        """ This function handles calls to the BLAST programs. Documentation from:
+            https://www.ncbi.nlm.nih.gov/books/NBK279675/
+        """
         arg_string = ""
+        # Best Hit algorithm score edge value (recommended value: 0.1)
         arg_string = add_property_to_string("best_hit_score_edge", arguments, arg_string, "0.1")
+        # Best Hit algorithm overhang value (recommended value: 0.1)
         arg_string = add_property_to_string("best_hit_overhang", arguments, arg_string, "0.1")
+        # Percent identity cutoff.
         arg_string = add_property_to_string("perc_identity", arguments, arg_string, "0")
+        # Length of initial exact match.
         arg_string = add_property_to_string("word_size", arguments, arg_string, "11")
         print("Printing " + ascii(arg_string))
 
