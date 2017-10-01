@@ -25,12 +25,11 @@ def check_extensions(files):
         exit(-1)
     return wgs_files
 
-def add_property_to_string(property, arg_dict, result_string, default):
-    """ This function is used to construct argument strings in various places. We check whether a certain property is
-        defined. If it is, we add its value to the argument string. If it isn't, we use the default.
+def add_property_to_string(property: str, arg_dict: dict, result_list: list, default) -> None:
+    """ This function is used to construct argument lists in various places. We check whether a certain property is
+        defined. If it is, we add its value to the argument list. If it isn't, we use the default.
     """
     if property in arg_dict:
-        result_string += ("-" + property + " " + arg_dict[property] + " ")
+        result_list.append("-" + property + " " + arg_dict[property] + " ")
     else:
-        result_string += ("-" + property + " " + default + " ")
-    return result_string
+        result_list.append("-" + property + " " + default + " ")
