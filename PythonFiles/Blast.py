@@ -16,14 +16,14 @@ class Blast(object):
     @staticmethod
     def make_blast_db(wgseqs, arguments):
         arg_string = ""
-        arg_string = add_property_to_string("dbtype", arguments, arg_string, "nucl")
+        arg_string = add_property_to_string("db_type", arguments, arg_string, "nucl")
 
         for WG_Sequence in wgseqs:
             name = os.path.splitext(WG_Sequence)[0]         # Remove file extension
             os.system("makeblastdb -in " + WG_Sequence + " -out " + name + "_blastdb " + arg_string)
 
     @staticmethod
-    def blast_query(files, query, arguments):
+    def blast_query(wgseqs, query, output_path, arguments):
         """ This function handles calls to the BLAST programs. Documentation from:
             https://www.ncbi.nlm.nih.gov/books/NBK279675/
         """
@@ -38,12 +38,11 @@ class Blast(object):
         arg_string = add_property_to_string("word_size", arguments, arg_string, "11")
         print("Printing " + ascii(arg_string))
 
-        for WG_Sequence in files:
+        for WG_Sequence in wgseqs:
             print("Blasting for " + WG_Sequence)
             seq_name = os.path.splitext(WG_Sequence)[0]
-            query_name = os.path.splitext(query)[0]
             os.system(
-                "blastn -query " +  query + " -db " + seq_name + "_blastdb -out " + query_name + "_blastout -outfmt 5 "
+                "blastn -query " +  query + " -db " + seq_name + "_blastdb -out " + output_path + "_blastout -outfmt 5 "
                 + arg_string)
 
 

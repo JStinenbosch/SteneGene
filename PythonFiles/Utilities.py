@@ -25,7 +25,7 @@ def check_extensions(files):
         exit(-1)
     return wgs_files
 
-def add_property_to_string(property, arg_dict, result_string, default):
+def add_property_to_string(property, arg_dict: dict, result_string: str, default):
     """ This function is used to construct argument strings in various places. We check whether a certain property is
         defined. If it is, we add its value to the argument string. If it isn't, we use the default.
     """
@@ -34,3 +34,8 @@ def add_property_to_string(property, arg_dict, result_string, default):
     else:
         result_string += ("-" + property + " " + default + " ")
     return result_string
+
+def parse_blast_out(blast_out_xml):
+    result_handle = open(blast_out_xml)
+    blast_records = NCBIXML.parse(result_handle)
+    blast_records = list(blast_records)
