@@ -3,23 +3,29 @@ from PythonFiles.Blast import Blast
 
 class BlastBuilder(object):
 
+    def __init__(self):
+        self.WGS_flags = {}
+        self.WGS_paths = []
+
+        self.query_flags = {}
+
     def set_WGS_paths(self, path_list: list):
         self.WGS_paths = path_list
 
     def set_WGS_flags(self, seq_type: str):
         if seq_type is "N":
-            self.WGS_flags = "nucl"
+            self.WGS_flags['dbtype'] = "nucl"
         else:
-            self.WGS_flags = "prot"
+            self.WGS_flags['dbtype'] = "prot"
 
     def set_query_paths(self, path_list: list):
         self.query_paths = path_list
 
     def set_query_flags(self, seq_type: str):
         if seq_type is "N":
-            self.query_flags = "nucl"
+            self.query_flags['seq_type'] = "nucl"
         else:
-            self.query_flags = "prot"
+            self.query_flags['seq_type'] = "prot"
 
     def set_blast_param(self, parameter_dict: dict):
         self.blast_parameters = parameter_dict

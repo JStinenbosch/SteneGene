@@ -16,7 +16,7 @@ class Blast(object):
     @staticmethod
     def make_blast_db(wgseqs, arguments):
         arg_string = ""
-        arg_string = add_property_to_string("seq_type", arguments, arg_string, "nucl")
+        arg_string = add_property_to_string("db_type", arguments, arg_string, "nucl")
 
         for WG_Sequence in wgseqs:
             name = os.path.splitext(WG_Sequence)[0]         # Remove file extension
