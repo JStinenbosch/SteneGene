@@ -4,8 +4,9 @@ from PythonFiles.Gui.OptionDialog import OptionDialog
 
 
 class PipelineWidget(QWidget):
-    def __init__(self):
+    def __init__(self, controller):
         super().__init__()
+        self.controller = controller
 
         self.initUI()
 
@@ -35,8 +36,7 @@ class PipelineWidget(QWidget):
         dialog = OptionDialog(required)
         dialog.exec_()
         results = dialog.result()
-        print(test)
-
+        self.updateControler(results, button)
 
     def getRequired(self, button):
         if button == "WGS":
@@ -62,5 +62,14 @@ class PipelineWidget(QWidget):
                 {"type": "single_file", "id": "2", "info": {}}
             ]
 
-
-
+    def updateControler(self, results, button):
+        if button == "WGS":
+            dict = {"WGS_path" : results["2"], "seq_type" : results["1"]}
+            self.controller.set_WGS(dict)
+        elif button == "Query":
+            dict = {"query_path": results["2"], "seq_type": results["1"]}
+            self.controller.set_WGS(dict)
+        elif button == "Blast":
+            print("Blast")
+        elif button == "Output":
+            print("Output")

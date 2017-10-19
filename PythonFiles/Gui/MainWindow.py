@@ -22,16 +22,9 @@ class MainWindow(QMainWindow):
         self.controller = controller
 
     def initUI(self):
-        self.pipeline = PipelineWidget()
+        self.pipeline = PipelineWidget(self.controller)
         self.setCentralWidget(self.pipeline)
         self.show()
 
     def run(self):
         self.initUI()
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = BlastWindow("test")
-    ex.run()
-    sys.exit(app.exec_())
