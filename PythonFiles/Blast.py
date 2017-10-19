@@ -23,7 +23,7 @@ class Blast(object):
             os.system("makeblastdb -in " + WG_Sequence + " -out " + name + "_blastdb " + arg_string)
 
     @staticmethod
-    def blast_query(wgseqs, query, output_path, arguments):
+    def blast_query(wgseqs, query, output_path, arguments, query_flag, seq_flag):
         """ This function handles calls to the BLAST programs. Documentation from:
             https://www.ncbi.nlm.nih.gov/books/NBK279675/
         """
@@ -41,8 +41,16 @@ class Blast(object):
         for WG_Sequence in wgseqs:
             print("Blasting for " + WG_Sequence)
             seq_name = os.path.splitext(WG_Sequence)[0]
+            if seq_flag['dbType'] == "nucl":
+                if query_flag['seq_type'] == "nucl":
+                    exec_string = "blastn"
+                else:
+                    exec_string = "tblastn"
+            elif seq_flag['dbType'] == "prot":
+                if query_flag['seq_type'] == "nucl":
+                    exec_string = "blastx"exec_string
+                else:
+                    exec_string = "blastp"
             os.system(
-                "blastn -query " +  query + " -db " + seq_name + "_blastdb -out " + output_path + "_blastout -outfmt 5 "
-                + arg_string)
-
-
+                exec_string + " -query " + query + " -db " + seq_name + "_blastdb -out " + output_path +
+                "_blastout -outfmt 5 " + arg_string)
