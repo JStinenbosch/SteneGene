@@ -14,4 +14,3 @@ class Controller(object):
     # This method starts one of the BLAST programs
     def start_BLAST(self, wgs, query, arguments):
         return None
-

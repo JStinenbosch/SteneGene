@@ -2,15 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-ZetCode PyQt5 tutorial
-
-In this example, we select a file with a
-QFileDialog and display its contents
-in a QTextEdit.
-
-Author: Jan Bodnar
-Website: zetcode.com
-Last edited: August 2017
+This file contains the main window for the Blast helper. This window displays some buttons linking to dynamically
+generated dialogs to create a blast query.
 """
 
 from PyQt5.QtWidgets import (QMainWindow, QTextEdit,
@@ -24,6 +17,8 @@ from PythonFiles.Gui.PipelineWidget import PipelineWidget
 class BlastWindow(QMainWindow):
     def __init__(self, controller):
         super().__init__()
+        self.setWindowTitle("Blast Helper")
+        self.setFixedSize(self.sizeHint())
         self.controller = controller
 
     def initUI(self):
