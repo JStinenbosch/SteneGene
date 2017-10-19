@@ -41,6 +41,7 @@ class Blast(object):
         for WG_Sequence in wgseqs:
             print("Blasting for " + WG_Sequence)
             seq_name = os.path.splitext(WG_Sequence)[0]
+            exec_string = ""
             if seq_flag['dbType'] == "nucl":
                 if query_flag['seq_type'] == "nucl":
                     exec_string = "blastn"
@@ -48,7 +49,7 @@ class Blast(object):
                     exec_string = "tblastn"
             elif seq_flag['dbType'] == "prot":
                 if query_flag['seq_type'] == "nucl":
-                    exec_string = "blastx"exec_string
+                    exec_string = "blastx"
                 else:
                     exec_string = "blastp"
             os.system(
