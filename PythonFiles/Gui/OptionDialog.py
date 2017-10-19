@@ -1,58 +1,49 @@
 from PyQt5.QtWidgets import *
 
+from PythonFiles.Gui.OptionWidgets.ChoiceWidget import ChoiceWidget
+from PythonFiles.Gui.OptionWidgets.FlagWidget import FlagWidget
 from PythonFiles.Gui.OptionWidgets.MultiFileSelectorWidget import MultiFileSelectorWidget
+from PythonFiles.Gui.OptionWidgets.SingleFileSelectorWidget import SingleFileSelectorWidget
 
 
 class OptionDialog(QDialog):
     def __init__(self, required):
         super().__init__()
 
+        self.required = required
         self.grid = QGridLayout()
         self.setLayout(self.grid)
+        self.widgets = {}
 
-        self.buildFileSelection(required["files"])
-        self.buildChoices(required["choices"])
-        self.buildFlags(required["flags"])
+        self.build()
 
         self.show()
 
-    def buildFileSelection(self, fileSelectors):
-        self.fileGrid = QGridLayout()
-        number = 0
-        for selector in fileSelectors:
-            if selector["type"] == "multi":
+    def build(self):
+        position = 1
+        for option in self.required:
+            option_type = option["type"]
+            option_id = option["id"]
+            option_info = option["info"]
+            if option_type == "choice" :
+                widget = ChoiceWidget(option_info)
+            elif option_type == "flags" :
+                widget = FlagWidget(option_info)
+            elif option_type == "multi_file":
                 widget = MultiFileSelectorWidget()
-                self.fileGrid.addWidget(widget, number, 1)
-            elif selector["type"] == "single":
-                print("Flikker op")
-                #self.buildSingleFileSelector()
+            elif option_type == "single_file":
+                widget = SingleFileSelectorWidget()
 
-        self.grid.addLayout(self.fileGrid, 1, 1)
+            self.widgets[option_id] = widget
+            self.grid.addWidget(widget, position, 1)
+            position += 1
 
-    def buildChoices(self, choices):
-        self.choiceGrid = QGridLayout()
-        number = 0
-        for choice in choices:
-            label = QLabel(choice["name"])
-            combobox = QComboBox()
-            for option in choice["options"]:
-                combobox.addItem(option)
-            self.choiceGrid.addWidget(label, number, 1)
-            self.choiceGrid.addWidget(combobox, number, 2)
-            number += 1
+    def result(self):
+        result_dict = {}
+        for _id in self.widgets:
+            widget = self.widgets[_id]
+            result_dict[_id] = widget.result()
 
-        self.grid.addLayout(self.choiceGrid, 2, 1)
+        return result_dict
 
-    def buildFlags(self, flags):
-        self.flagGrid = QGridLayout()
-        number = 0
-        for flag in flags:
-            checkBox = QCheckBox(flag["name"])
-            checkBox.setChecked(flag["state"])
-            xPos = number % 4
-            yPos = number / 4
-            self.flagGrid.addWidget(checkBox, yPos, xPos)
-            number += 1
-
-        self.grid.addLayout(self.flagGrid, 3, 1)
 

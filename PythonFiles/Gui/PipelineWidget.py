@@ -34,26 +34,33 @@ class PipelineWidget(QWidget):
         required = self.getRequired(button.text())
         dialog = OptionDialog(required)
         dialog.exec_()
+        results = dialog.result()
+        print(test)
 
 
     def getRequired(self, button):
-        flags = [
-            { "name" : "Lars", "state" : True},
-            { "name" : "Frank", "state" : False},
-            { "name" : "Jasper", "state" : False},
-            { "name" : "Blast", "state" : False},
-            { "name" : "Test", "state" : True},
-            { "name" : "Dus...", "state" : False},
-        ]
-        choices = [
-            { "name" : "Type", "options" : ["Nucleotide", "Proteine"]},
-            {"name": "Bullshit", "options": ["Nucleotide", "Proteine"]}
-        ]
-        files = [
-            {"type" : "multi"},
-            {"type" : "single"}
-        ]
-        return {"flags" : flags, "choices" : choices, "files" : files}
+        if button == "WGS":
+            return [
+                {"type": "multi_file", "id": "2", "info": {}},
+                {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Proteine"]}}
+            ]
+        elif button == "Query":
+            return [
+                {"type": "multi_file", "id": "2", "info": {}},
+                {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Proteine"]}}
+            ]
+        elif button == "Blast":
+            return [
+                {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Proteine"]}},
+                {"type": "flags", "id": "2", "info": {
+                    "flags": [{"name": "Lars", "state": True}, {"name": "Frank", "state": False},
+                              {"name": "Jasper", "state": False}, {"name": "Blast", "state": False},
+                              {"name": "Test", "state": True}, {"name": "Dus...", "state": False}, ]}}
+            ]
+        elif button == "Output":
+            return [
+                {"type": "single_file", "id": "2", "info": {}}
+            ]
 
 
 
