@@ -4,13 +4,33 @@
     Description:    This file contains the controller, which serves as the bridge between the GUI and the pipeline of
                     biological programs. 
 '''
+from PythonFiles.BlastBuilder import BlastBuilder
+from PythonFiles.Gui.MainWindow import MainWindow
+
 
 class Controller(object):
-    # The controller needs a method to read the command which is sent to it by the GUI. We parse the pipeline arguments
-    # and call the correct methods in the object.
-    def parse_arguments(self):
-        return None
 
-    # This method starts one of the BLAST programs
-    def start_BLAST(self, wgs, query, arguments):
-        return None
+    def __init__(self):
+        self.view = MainWindow(self)
+        self.model = BlastBuilder()
+        self.view.run()
+
+    def set_WGS(self, parameter_dict: dict):
+        self.model.set_WGS_paths(parameter_dict["WGS_path"])
+        self.model.set_WGS_flags(parameter_dict["seq_type"])
+
+    def set_query(self, parameter_dict: dict):
+        self.model.set_query_paths(parameter_dict["query_path"])
+        self.model.set_query_flags(parameter_dict["seq_type"])
+
+    def set_blast_param(self, parameter_dict: dict):
+        self.model.set_blast_param(parameter_dict)
+
+    def set_output_file(self, target_output: str):
+        self.model.set_output_file(target_output)
+
+    def run_blast(self):
+        self.model.run_blast()
+
+if __name__ == "__main__":
+    Controller()

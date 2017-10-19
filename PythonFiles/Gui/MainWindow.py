@@ -14,7 +14,7 @@ import sys
 from PythonFiles.Gui.PipelineWidget import PipelineWidget
 
 
-class BlastWindow(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self, controller):
         super().__init__()
         self.setWindowTitle("Blast Helper")
