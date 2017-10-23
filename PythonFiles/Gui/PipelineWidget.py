@@ -25,9 +25,11 @@ class PipelineWidget(QWidget):
         ], "Query")
         self.QueryButton.clicked.connect(lambda: self.onButtonClicked(self.QueryButton))
         self.BlastButton = InfoButton([
-            {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Protein"]}},
-            {"type": "flags", "id": "2", "info": {
-                "flags": []}}
+            {"type": "text_edit", "id": "1", "info": {"label": "best_hit_score_edge", "default": "0.1"}},
+            {"type": "text_edit", "id": "2", "info": {"label": "best_hit_overhang", "default": "0.1"}},
+            {"type": "text_edit", "id": "3", "info": {"label": "perc_identity", "default": "0"}},
+            {"type": "text_edit", "id": "4", "info": {"label": "word_size", "default": "11"}},
+
         ], "Blast")
         self.BlastButton.clicked.connect(lambda: self.onButtonClicked(self.BlastButton))
         self.OutputButton = InfoButton([
@@ -68,7 +70,10 @@ class PipelineWidget(QWidget):
             dict = {"query_path": results["2"], "seq_type": results["1"]}
             self.controller.set_query(dict)
         elif button.name == "Blast":
-            print("Blast")
+            blast_dict = {}
+            for k in results:
+                blast_dict[results[k]["label"]] = results[k]["value"]
+            self.controller.set_blast_param(blast_dict)
         elif button.name == "Output":
             self.controller.set_output_file(results['1'])
             print("Output")

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 
 from PythonFiles.Gui.OptionWidgets.ChoiceWidget import ChoiceWidget
 from PythonFiles.Gui.OptionWidgets.FlagWidget import FlagWidget
+from PythonFiles.Gui.OptionWidgets.InputWidget import InputWidget
 from PythonFiles.Gui.OptionWidgets.MultiFileSelectorWidget import MultiFileSelectorWidget
 from PythonFiles.Gui.OptionWidgets.SingleFileSelectorWidget import SingleFileSelectorWidget
 
@@ -33,6 +34,8 @@ class OptionDialog(QDialog):
                 widget = MultiFileSelectorWidget()
             elif option_type == "single_file":
                 widget = SingleFileSelectorWidget()
+            elif option_type == "text_edit":
+                widget = InputWidget(option_info)
 
             self.widgets[option_id] = widget
             self.grid.addWidget(widget, position, 1)
