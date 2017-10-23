@@ -1,5 +1,0 @@
-pip
-pysettings
-biopython
-plumbum
-pyforms
