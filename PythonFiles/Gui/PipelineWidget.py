@@ -31,7 +31,7 @@ class PipelineWidget(QWidget):
         ], "Blast")
         self.BlastButton.clicked.connect(lambda: self.onButtonClicked(self.BlastButton))
         self.OutputButton = InfoButton([
-            {"type": "single_file", "id": "2", "info": {}}
+            {"type": "single_file", "id": "1", "info": {}}
         ], "Output")
         self.OutputButton.clicked.connect(lambda: self.onButtonClicked(self.OutputButton))
 
@@ -52,7 +52,6 @@ class PipelineWidget(QWidget):
             self.controller.run_blast()
         return
 
-
     def onButtonClicked(self, button):
         required = button.required
         name = button.name
@@ -62,13 +61,14 @@ class PipelineWidget(QWidget):
             self.updateController(results, button)
 
     def updateController(self, results, button):
-        if button == "WGS":
+        if button.name == "WGS":
             dict = {"WGS_path": results["2"], "seq_type": results["1"]}
             self.controller.set_WGS(dict)
-        elif button == "Query":
+        elif button.name == "Query":
             dict = {"query_path": results["2"], "seq_type": results["1"]}
             self.controller.set_query(dict)
-        elif button == "Blast":
+        elif button.name == "Blast":
             print("Blast")
-        elif button == "Output":
+        elif button.name == "Output":
+            self.controller.set_output_file(results['1'])
             print("Output")
