@@ -28,7 +28,9 @@
 <Hit>
   <Hit_num>1</Hit_num>
   <Hit_id>gnl|BL_ORD_ID|0</Hit_id>
-  <Hit_def>ISDA</Hit_def>
+  <Hit_def>ISDA</Hitnucl":
+                if query_flag['seq_type'] == "nucl":
+                    exec_string = "bla_def>
   <Hit_accession>0</Hit_accession>
   <Hit_len>1053</Hit_len>
   <Hit_hsps>

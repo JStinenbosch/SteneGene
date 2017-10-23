@@ -16,14 +16,14 @@ class Blast(object):
     @staticmethod
     def make_blast_db(wgseqs, arguments):
         arg_string = ""
-        arg_string = add_property_to_string("db_type", arguments, arg_string, "nucl")
+        arg_string = add_property_to_string("dbtype", arguments, arg_string, "nucl")
 
         for WG_Sequence in wgseqs:
             name = os.path.splitext(WG_Sequence)[0]         # Remove file extension
             os.system("makeblastdb -in " + WG_Sequence + " -out " + name + "_blastdb " + arg_string)
 
     @staticmethod
-    def blast_query(wgseqs, query, output_path, arguments):
+    def blast_query(wgseqs, query_paths, output_path, arguments, query_flag, seq_flag):
         """ This function handles calls to the BLAST programs. Documentation from:
             https://www.ncbi.nlm.nih.gov/books/NBK279675/
         """
@@ -39,10 +39,20 @@ class Blast(object):
         print("Printing " + ascii(arg_string))
 
         for WG_Sequence in wgseqs:
-            print("Blasting for " + WG_Sequence)
-            seq_name = os.path.splitext(WG_Sequence)[0]
-            os.system(
-                "blastn -query " +  query + " -db " + seq_name + "_blastdb -out " + output_path + "_blastout -outfmt 5 "
-                + arg_string)
-
-
+            for query in query_paths:
+                print("Blasting for " + WG_Sequence)
+                seq_name = os.path.splitext(WG_Sequence)[0]
+                exec_string = ""
+                if seq_flag['dbtype'] == "nucl":
+                    if query_flag['seq_type'] == "nucl":
+                        exec_string = "blastn"
+                    else:
+                        exec_string = "tblastn"
+                elif seq_flag['dbtype'] == "prot":
+                    if query_flag['seq_type'] == "nucl":
+                        exec_string = "blastx"
+                    else:
+                        exec_string = "blastp"
+                os.system(
+                    exec_string + " -query " + query + " -db " + seq_name + "_blastdb -out " + output_path +
+                    "_blastout -outfmt 5 " + arg_string)
