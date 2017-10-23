@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 
+from Gui.CustomButtons import InfoButton
 from PythonFiles.Gui.OptionDialog import OptionDialog
 
 
@@ -14,61 +15,49 @@ class PipelineWidget(QWidget):
         self.grid = QGridLayout()
         self.setLayout(self.grid)
 
-        self.WGSButton = QPushButton("WGS")
+        self.WGSButton = InfoButton([
+            {"type": "multi_file", "id": "2", "info": {}},
+            {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Protein"]}}
+        ], "WGS")
         self.WGSButton.clicked.connect(lambda: self.onButtonClicked(self.WGSButton))
-        self.QueryButton = QPushButton("Query")
+        self.QueryButton = InfoButton([
+            {"type": "multi_file", "id": "2", "info": {}},
+            {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Protein"]}}
+        ], "Query")
         self.QueryButton.clicked.connect(lambda: self.onButtonClicked(self.QueryButton))
-        self.BlastButton = QPushButton("Blast")
+        self.BlastButton = InfoButton([
+            {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Protein"]}},
+            {"type": "flags", "id": "2", "info": {
+                "flags": []}}
+        ], "Blast")
         self.BlastButton.clicked.connect(lambda: self.onButtonClicked(self.BlastButton))
-        self.OutputButton = QPushButton("Output")
+        self.OutputButton = InfoButton([
+            {"type": "single_file", "id": "2", "info": {}}
+        ], "Output")
         self.OutputButton.clicked.connect(lambda: self.onButtonClicked(self.OutputButton))
 
         inputGrid = QGridLayout()
-        inputGrid.addWidget(self.WGSButton,1,1)
-        inputGrid.addWidget(self.QueryButton,1,2)
+        inputGrid.addWidget(self.WGSButton, 1, 1)
+        inputGrid.addWidget(self.QueryButton, 1, 2)
 
-        self.grid.addLayout(inputGrid,1,1)
+        self.grid.addLayout(inputGrid, 1, 1)
         self.grid.addWidget(self.BlastButton, 2, 1)
         self.grid.addWidget(self.OutputButton, 3, 1)
 
     def onButtonClicked(self, button):
-        required = self.getRequired(button.text())
+        required = button.required
         dialog = OptionDialog(required)
         dialog.exec_()
         results = dialog.result()
-        self.updateControler(results, button)
+        self.updateController(results, button)
 
-    def getRequired(self, button):
+    def updateController(self, results, button):
         if button == "WGS":
-            return [
-                {"type": "multi_file", "id": "2", "info": {}},
-                {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Proteine"]}}
-            ]
-        elif button == "Query":
-            return [
-                {"type": "multi_file", "id": "2", "info": {}},
-                {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Proteine"]}}
-            ]
-        elif button == "Blast":
-            return [
-                {"type": "choice", "id": "1", "info": {"label": "Type", "options": ["Nucleotide", "Proteine"]}},
-                {"type": "flags", "id": "2", "info": {
-                    "flags": [{"name": "Lars", "state": True}, {"name": "Frank", "state": False},
-                              {"name": "Jasper", "state": False}, {"name": "Blast", "state": False},
-                              {"name": "Test", "state": True}, {"name": "Dus...", "state": False}, ]}}
-            ]
-        elif button == "Output":
-            return [
-                {"type": "single_file", "id": "2", "info": {}}
-            ]
-
-    def updateControler(self, results, button):
-        if button == "WGS":
-            dict = {"WGS_path" : results["2"], "seq_type" : results["1"]}
+            dict = {"WGS_path": results["2"], "seq_type": results["1"]}
             self.controller.set_WGS(dict)
         elif button == "Query":
             dict = {"query_path": results["2"], "seq_type": results["1"]}
-            self.controller.set_WGS(dict)
+            self.controller.set_query(dict)
         elif button == "Blast":
             print("Blast")
         elif button == "Output":
