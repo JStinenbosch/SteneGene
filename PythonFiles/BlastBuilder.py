@@ -35,4 +35,4 @@ class BlastBuilder(object):
 
     def run_blast(self):
         Blast.make_blast_db(self.WGS_paths, self.WGS_flags)
-        Blast.blast_query(self.WGS_paths, self.query_paths, self.output_path, self.blast_parameters)
+        Blast.blast_query(self.WGS_paths, self.query_paths, self.output_path, self.blast_parameters, self.query_flags, self.WGS_flags)
