@@ -43,13 +43,23 @@ class PipelineWidget(QWidget):
         self.grid.addWidget(self.BlastButton, 2, 1)
         self.grid.addWidget(self.OutputButton, 3, 1)
 
+        ok_button = QPushButton("&Run")
+        ok_button.clicked.connect(self.accept)
+        self.grid.addWidget(ok_button, 4, 1)
+
+    def accept(self):
+        if self.controller.can_run():
+            self.controller.run_blast()
+        return
+
+
     def onButtonClicked(self, button):
         required = button.required
         name = button.name
         dialog = OptionDialog(name, required)
-        dialog.exec_()
-        results = dialog.result()
-        self.updateController(results, button)
+        if dialog.exec_():
+            results = dialog.result()
+            self.updateController(results, button)
 
     def updateController(self, results, button):
         if button == "WGS":

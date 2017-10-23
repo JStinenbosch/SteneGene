@@ -36,6 +36,10 @@ class Controller(object):
     def run_blast(self):
         self.model.run_blast()
 
+    def can_run(self):
+        print(self.model.is_runnable())
+        return self.model.is_runnable()
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     Controller()

@@ -33,6 +33,10 @@ class BlastBuilder(object):
     def set_output_file(self, target_output: str):
         self.output_path = target_output
 
+    def is_runnable(self):
+        #Checks whether WGS_paths and query_paths
+        return hasattr(self, "WGS_paths") and hasattr(self, "query_paths")
+
     def run_blast(self):
         Blast.make_blast_db(self.WGS_paths, self.WGS_flags)
         Blast.blast_query(self.WGS_paths, self.query_paths, self.output_path, self.blast_parameters, self.query_flags, self.WGS_flags)

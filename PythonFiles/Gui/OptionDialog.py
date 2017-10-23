@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 
 from PythonFiles.Gui.OptionWidgets.ChoiceWidget import ChoiceWidget
@@ -15,9 +16,7 @@ class OptionDialog(QDialog):
         self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.widgets = {}
-
         self.build()
-
         self.show()
 
     def build(self):
@@ -38,6 +37,16 @@ class OptionDialog(QDialog):
             self.widgets[option_id] = widget
             self.grid.addWidget(widget, position, 1)
             position += 1
+
+        decision_buttons = QHBoxLayout()
+        ok_button = QPushButton("&Ok")
+        ok_button.clicked.connect(self.accept)
+        decision_buttons.addWidget(ok_button)
+        cancel_button = QPushButton("&Cancel")
+        cancel_button.clicked.connect(self.reject)
+        decision_buttons.addWidget(cancel_button)
+
+        self.grid.addLayout(decision_buttons, position+1, 1)
 
     def result(self):
         result_dict = {}
