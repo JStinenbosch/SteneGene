@@ -14,14 +14,14 @@ class SingleFileSelectorWidget(QWidget):
         self.label = QLabel("...")
         self.label.setFixedWidth(100)
 
-        self.openButton = QPushButton("Open")
+        self.openButton = QPushButton("Select Output")
         self.openButton.clicked.connect(self.onOpen)
 
         self.grid.addWidget(self.label, 1, 1)
         self.grid.addWidget(self.openButton, 1, 2)
 
     def onOpen(self):
-        name = QFileDialog.getSaveFileName(self, "Ouput")
+        name = QFileDialog.getSaveFileName(self, "Output")
         self.file = name[0]
         self.label.setText(name[0])
 

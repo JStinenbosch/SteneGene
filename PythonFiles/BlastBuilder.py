@@ -9,11 +9,13 @@ class BlastBuilder(object):
 
         self.query_flags = {}
 
+        self.blast_parameters = {}
+
     def set_WGS_paths(self, path_list: list):
         self.WGS_paths = path_list
 
     def set_WGS_flags(self, seq_type: str):
-        if seq_type is "N":
+        if seq_type in ["Nucleotide", "N"]:
             self.WGS_flags['dbtype'] = "nucl"
         else:
             self.WGS_flags['dbtype'] = "prot"
@@ -22,7 +24,7 @@ class BlastBuilder(object):
         self.query_paths = path_list
 
     def set_query_flags(self, seq_type: str):
-        if seq_type is "N":
+        if seq_type in ["Nucleotide", "N"]:
             self.query_flags['seq_type'] = "nucl"
         else:
             self.query_flags['seq_type'] = "prot"
