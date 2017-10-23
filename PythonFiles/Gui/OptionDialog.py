@@ -30,7 +30,7 @@ class OptionDialog(QDialog):
             elif option_type == "flags" :
                 widget = FlagWidget(option_info)
             elif option_type == "multi_file":
-                widget = MultiFileSelectorWidget()
+                widget = MultiFileSelectorWidget("*.fa")
             elif option_type == "single_file":
                 widget = SingleFileSelectorWidget()
 

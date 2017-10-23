@@ -2,10 +2,11 @@ from PyQt5.QtWidgets import *
 
 
 class MultiFileSelectorWidget(QWidget):
-    def __init__(self):
+    def __init__(self, filetype=None):
         super().__init__()
         self.files = []
         self.build()
+        self.filetype = filetype
 
     def build(self):
         self.grid = QGridLayout()
@@ -20,7 +21,7 @@ class MultiFileSelectorWidget(QWidget):
         self.grid.addWidget(self.openButton, 1, 2)
 
     def onOpen(self):
-        names = QFileDialog.getOpenFileNames(self, "Open files")
+        names = QFileDialog.getOpenFileNames(self, "Open files", filter=self.filetype)
         for name in names[0]:
             self.files.append(name)
             self.listWidget.addItem(QListWidgetItem(name))
