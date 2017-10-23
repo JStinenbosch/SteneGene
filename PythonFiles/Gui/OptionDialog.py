@@ -7,9 +7,10 @@ from PythonFiles.Gui.OptionWidgets.SingleFileSelectorWidget import SingleFileSel
 
 
 class OptionDialog(QDialog):
-    def __init__(self, required):
+    def __init__(self, name, required):
         super().__init__()
 
+        self.setWindowTitle(name)
         self.required = required
         self.grid = QGridLayout()
         self.setLayout(self.grid)

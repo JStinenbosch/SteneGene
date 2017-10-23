@@ -8,7 +8,6 @@ class PipelineWidget(QWidget):
     def __init__(self, controller):
         super().__init__()
         self.controller = controller
-
         self.initUI()
 
     def initUI(self):
@@ -46,7 +45,8 @@ class PipelineWidget(QWidget):
 
     def onButtonClicked(self, button):
         required = button.required
-        dialog = OptionDialog(required)
+        name = button.name
+        dialog = OptionDialog(name, required)
         dialog.exec_()
         results = dialog.result()
         self.updateController(results, button)
