@@ -37,6 +37,7 @@ class Blast(object):
         # Length of initial exact match.
         arg_string = add_property_to_string("word_size", arguments, arg_string, "11")
         print("Printing " + ascii(arg_string))
+        blast_xml_path = []
 
         for WG_Sequence in wgseqs:
             for query in query_paths:
@@ -54,5 +55,10 @@ class Blast(object):
                     else:
                         exec_string = "blastp"
                 os.system(
-                    exec_string + " -query " + query + " -db " + seq_name + "_blastdb -out " + output_path +
-                    "_blastout -outfmt 5 " + arg_string)
+                    exec_string + " -query " + query + " -db " + seq_name + "_blastdb -out " + output_path + "_" +
+                    os.path.splitext(os.path.basename(WG_Sequence))[0] + ".xml -outfmt 5 " + arg_string)
+
+            blast_xml_path.append(output_path + "_" + os.path.splitext(os.path.basename(WG_Sequence))[0] + ".xml")
+
+        return blast_xml_path
+

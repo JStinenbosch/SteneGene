@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication
 
 from PythonFiles.BlastBuilder import BlastBuilder
 from PythonFiles.Gui.MainWindow import MainWindow
+from PythonFiles.Utilities import handle_input_files
 
 
 class Controller(object):
@@ -24,7 +25,8 @@ class Controller(object):
         self.model.set_WGS_flags(parameter_dict["seq_type"])
 
     def set_query(self, parameter_dict: dict):
-        self.model.set_query_paths(parameter_dict["query_path"])
+        handle_input_files(parameter_dict["query_path"])
+        self.model.set_query_paths(["GeneQuery.fa"])
         self.model.set_query_flags(parameter_dict["seq_type"])
 
     def set_blast_param(self, parameter_dict: dict):
@@ -35,6 +37,9 @@ class Controller(object):
 
     def run_blast(self):
         self.model.run_blast()
+
+    def parse_blast(self):
+        self.model.parse_blast()
 
     def can_run(self):
         print(self.model.is_runnable())

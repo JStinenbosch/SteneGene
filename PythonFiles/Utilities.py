@@ -12,7 +12,7 @@ def concat_files(files, name):
     with open(name , 'wb') as wfd:
         for f in files:
             with open(f, 'rb') as fd:
-                shutil.copyfileobj(fd, wfd, 1024 * 1024 * 10)
+                shutil.copyfileobj(fd, wfd, 1024 * 1024 * 10) # most efficient way to copy files
 
 def extract_sequence(blastout_XML_file):
     with open(blastout_XML_file) as handle:

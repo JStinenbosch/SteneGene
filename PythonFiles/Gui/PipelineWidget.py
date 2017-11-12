@@ -52,6 +52,7 @@ class PipelineWidget(QWidget):
     def accept(self):
         if self.controller.can_run():
             self.controller.run_blast()
+            self.controller.parse_blast()
         return
 
     def onButtonClicked(self, button):

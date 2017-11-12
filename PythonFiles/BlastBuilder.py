@@ -1,9 +1,13 @@
+from PythonFiles import BlastParser
 from PythonFiles.Blast import Blast
+
+
 
 
 class BlastBuilder(object):
 
     def __init__(self):
+        self.blast_query = []
         self.WGS_flags = {}
         self.WGS_paths = []
 
@@ -41,4 +45,8 @@ class BlastBuilder(object):
 
     def run_blast(self):
         Blast.make_blast_db(self.WGS_paths, self.WGS_flags)
-        Blast.blast_query(self.WGS_paths, self.query_paths, self.output_path, self.blast_parameters, self.query_flags, self.WGS_flags)
+        self.blast_xml = Blast.blast_query(self.WGS_paths, self.query_paths, self.output_path, self.blast_parameters, self.query_flags, self.WGS_flags)
+
+    def parse_blast(self):
+        BlastParser.add_dir_to_path(self.blast_xml)
+        BlastParser.xml_to_fasta_files(self.blast_xml, expect_value=0.01)
